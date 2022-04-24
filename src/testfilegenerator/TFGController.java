@@ -45,6 +45,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+
 /**
  *
  * @author TokZ
@@ -260,6 +261,7 @@ public class TFGController implements Initializable {
 
     //WHEN LOAD PREFERENCES IS CLICKED, IT SETS THE PREFERENCES TO THOSE SAVED WITHIN THE USERS PREFERENCES NODE
     public void setInitialPreferences() {
+        String basePath = System.getProperty("user.dir");
         if (UsersUtils.loggedInUser.getPreferences().get("theme", null).equals("dark")) {
             mainStackPane.getScene().getStylesheets().add("styles/dark-theme.css");
         } else if (UsersUtils.loggedInUser.getPreferences().get("theme", null).equals("light")) {
