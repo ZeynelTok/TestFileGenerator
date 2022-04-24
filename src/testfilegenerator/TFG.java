@@ -5,17 +5,10 @@
  */
 package testfilegenerator;
 
-import com.broadridge.testfilegenerator.users.User;
-import com.broadridge.testfilegenerator.users.Role;
-import java.util.ArrayList;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 /**
@@ -25,7 +18,7 @@ import javafx.stage.Stage;
 public class TFG extends Application {
 
     
-    //Starts the main 
+    //Starts the main UI
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("TFG.fxml"));

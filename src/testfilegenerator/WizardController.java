@@ -12,13 +12,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.function.UnaryOperator;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -37,18 +32,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
-import javafx.util.converter.IntegerStringConverter;
 
 /**
  *
@@ -56,6 +47,7 @@ import javafx.util.converter.IntegerStringConverter;
  */
 public class WizardController {
 
+    //CREATION OF ALL FXML VARIABLES
     @FXML
     private ListView<String> accountNumberTable;
 
@@ -144,9 +136,6 @@ public class WizardController {
     private ChoiceBox<String> swiftFormatSelector;
 
     @FXML
-    private RadioButton transactionCountButton;
-
-    @FXML
     private TextField accountTextBox;
 
     @FXML
@@ -154,9 +143,6 @@ public class WizardController {
 
     @FXML
     private ComboBox<String> currencies;
-
-    @FXML
-    private ChoiceBox<String> currencies2;
 
     @FXML
     private ChoiceBox<String> openingBalCOrD;
@@ -236,20 +222,23 @@ public class WizardController {
 
     @FXML
     private Label summaryEstimate;
-    
-        @FXML
+
+    @FXML
     private Label summaryDoubleSided;
 
     @FXML
     private Label txnValueBetweenPrompt;
-    private final List<Pane> steps = new ArrayList<>();
-    ObservableList<String> accounts = FXCollections.observableArrayList();
-    ObservableList<String> observableCurrencies;
 
+    //STEPS USAGE TO DETERMINE CURRENT STEP OF GENERATION PROCESS
+    private final List<Pane> steps = new ArrayList<>();
     private int currentStep = 0;
 
+    //ACCOUNTS & CURRENCIES STORED IN GLOBAL LIST TO BE USED THROUGHOUT FILE GENERATION
+    ObservableList<String> accounts = FXCollections.observableArrayList();
+    ObservableList<String> observableCurrencies;
     Instant start;
 
+    //INITIALISES THE FILE GENERATION WIZARD STARTING FROM FIRST STEP
     @FXML
     public void initialize() throws Exception {
         addSteps();
@@ -262,6 +251,7 @@ public class WizardController {
         finalGenerateButton.setVisible(false);
     }
 
+    //ADDS ALL THE PANES TO THE STEPS
     public void addSteps() throws IOException, InterruptedException {
         steps.add(pane1);
         steps.add(pane2);
@@ -280,15 +270,7 @@ public class WizardController {
         ObservableList<String> observableFormats = FXCollections.observableArrayList("MT940");
         swiftFormatSelector.setItems(observableFormats);
 
-//        Set values for size dropdown
-//        ObservableList<String> observableSizes = FXCollections.observableArrayList("b", "Kb", "Mb", "Gb");
-//        sizeChoice.setItems(observableSizes);
-        //Toggle Group for file size or transaction count selectors
-//        ToggleGroup group = new ToggleGroup();
-//        fileSizeButton.setToggleGroup(group);
-//        fileSizeButton.setSelected(true);
-//        transactionCountButton.setToggleGroup(group);
-        //Second toggle group for account information spage
+        //VARIOUS TOGGLE GROUPS FOR BUTTONS
         ToggleGroup group2 = new ToggleGroup();
         randomlyGenerateButton.setToggleGroup(group2);
         randomlyGenerateButton.setSelected(true);
@@ -305,7 +287,6 @@ public class WizardController {
 
             return null;
         };
-
         UnaryOperator<Change> filter2 = change2 -> {
             String text = change2.getText();
 
@@ -331,6 +312,7 @@ public class WizardController {
         txnValueTo.setTextFormatter(textFormatter6);
         openingBalanceAmount.setTextFormatter(textFormatter7);
         closingBalanceAmount.setTextFormatter(textFormatter8);
+
         //Slider defaults
         complexity2Text.setVisible(false);
         complexity3Text.setVisible(false);
@@ -341,7 +323,6 @@ public class WizardController {
         txnValueFrom.setDisable(true);
         txnValueTo.setDisable(true);
         balanceGenerateSwitch();
-
         populateCurrencies();
 
         ObservableList<String> observableCorD = FXCollections.observableArrayList("C", "D");
@@ -355,6 +336,7 @@ public class WizardController {
 
     }
 
+    //SWITCHES FOR THE BIC SELECTOR
     public void bicSelectors() {
         if (sBAuto.isSelected()) {
             senderBicBox.setDisable(true);
@@ -370,18 +352,16 @@ public class WizardController {
         }
     }
 
+    //POPULATES THE CURRENCIES WITH THE TOP 25 CURRENCIES IN THE WORLD SINCE ISO 4217 STANDARD CURRENCIES IS TOO LONG,UNNECCESARY
+    //AND NOT IN ORDER
     public void populateCurrencies() {
 
         observableCurrencies = FXCollections.observableArrayList("USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "HKD",
                 "NZD", "SEK", "KRW", "SGD", "NOK", "MXN", "INR", "RUB", "ZAR", "TRY", "BRL", "TWD", "DKK", "PLN", "THB", "IDR");
-// Too many ISO 4217 currencies, list is cluttered and not in alphabetical order. Using 25 most traded currencies in the world instead
-//        Set<Currency> currenciesList = Currency.getAvailableCurrencies();
-//        for (Currency currency : currenciesList){
-//            observableCurrencies.add(currency.toString());
-//        }
         currencies.setItems(observableCurrencies);
     }
 
+    //SWITCHES FOR THE BALANCE GENERATION 
     public void balanceGenerateSwitch() {
         if (balanceRandomButton.isSelected()) {
             openingBalCOrD.setDisable(true);
@@ -408,6 +388,7 @@ public class WizardController {
 
     }
 
+    //VALIDATION METHOD THAT CHECKS TO SEE IF TEXT FIELDS ARE POPULATED BEFORE ALLOWING PROGRESS ONTO NEXT PAGE
     public boolean validated(int currentStep) {
         Pane checkPane;
         if (currentStep == 0) {
@@ -477,6 +458,7 @@ public class WizardController {
         return true;
     }
 
+    //GOES TO NEXT PAGE IF CURRENT PAGE IS VALIDATED
     public void nextAction() throws IOException {
         if (validated(currentStep)) {
             currentStep++;
@@ -504,6 +486,7 @@ public class WizardController {
 
     }
 
+    //GOES TO PREVIOUS PAGE
     public void backAction() throws IOException {
         currentStep--;
         stackPane.getChildren().clear();
@@ -517,6 +500,7 @@ public class WizardController {
         }
     }
 
+    //FINAL SUMMARY PAGE SHOWING ALL THE SELECTED IMPUT THROUGHOUT THE FILE GENERATION
     public void summaryPage() {
         summarySwiftFormat.setText(summarySwiftFormat.getText().split(":")[0] + ": " + swiftFormatSelector.getValue());
         summaryDays.setText(summaryDays.getText().split(":")[0] + ": " + daysOfDataText.getText());
@@ -526,34 +510,29 @@ public class WizardController {
         summaryComplexity.setText(summaryComplexity.getText().split(":")[0] + ": " + complexitySlider.getValue());
         summaryDoubleSided.setText(summaryDoubleSided.getText().split(":")[0] + ": " + generateDoubleSides.isSelected());
         int totalFiles = (Integer.parseInt(daysOfDataText.getText())
-                *Integer.parseInt(numberOfAccountsText.getText())*Integer.parseInt(numberOfFilesText.getText()));
-        summaryTotalFiles.setText(summaryTotalFiles.getText().split(":")[0] + ": "+ totalFiles);    
-        int totalTxns = Integer.parseInt(daysOfDataText.getText())*Integer.parseInt(numberOfAccountsText.getText())*Integer.parseInt(numberOfFilesText.getText())*Integer.parseInt(sizeOrAmountText.getText());
+                * Integer.parseInt(numberOfAccountsText.getText()) * Integer.parseInt(numberOfFilesText.getText()));
+        summaryTotalFiles.setText(summaryTotalFiles.getText().split(":")[0] + ": " + totalFiles);
+        int totalTxns = Integer.parseInt(daysOfDataText.getText()) * Integer.parseInt(numberOfAccountsText.getText()) * Integer.parseInt(numberOfFilesText.getText()) * Integer.parseInt(sizeOrAmountText.getText());
         summaryTotalTxns.setText(summaryTotalTxns.getText().split(":")[0] + ": " + totalTxns);
         String estimatedTime = "";
-        if (totalFiles<5000){
+        if (totalFiles < 5000) {
             estimatedTime = "Instant";
-        }
-        else if (totalFiles<25000){
+        } else if (totalFiles < 25000) {
             estimatedTime = "Under 1 minute";
-        }
-        else if (totalFiles<100000){
+        } else if (totalFiles < 100000) {
             estimatedTime = "Under 5 minutes";
-        }
-        else if (totalFiles<250000){
+        } else if (totalFiles < 250000) {
             estimatedTime = "Under 10 minutes";
-        }
-        else if (totalFiles<500000){
+        } else if (totalFiles < 500000) {
             estimatedTime = "Under 30 minutes";
-        }
-        else {
+        } else {
             estimatedTime = "Under an hour";
         }
         summaryEstimate.setText(summaryEstimate.getText().split(":")[0] + ": " + estimatedTime);
-        
-        
+
     }
 
+    //ALLOWS USER TO BROWSE DIRECTORY TO SELECT
     public void browseDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
@@ -564,6 +543,7 @@ public class WizardController {
 
     }
 
+    //SWITCH FOR THE ACCOUNTS SELECTION
     public void accountSelectorSwitch() {
         if (randomlyGenerateButton.isSelected()) {
             randomlyGenerateNote.setVisible(true);
@@ -586,6 +566,7 @@ public class WizardController {
         }
     }
 
+    //SWITCH FOR THE TRANSACTION VALUES
     public void txnAutoSwitch() {
         if (autoTxnValue.isSelected()) {
             txnValueFrom.setDisable(true);
@@ -597,6 +578,7 @@ public class WizardController {
         }
     }
 
+    //FUNCTIONALITY TO ADD ACCOUNTS AND VALIDATE TEH SIZE OF ACCOUNTS
     public void addAccount() {
         if (accountTextBox.getText().trim().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -618,14 +600,17 @@ public class WizardController {
 
     }
 
+    //REMOVES ACCOUNTS
     public void removeAccount() {
         accounts.remove(accountNumberTable.getSelectionModel().getSelectedItem());
     }
 
+    //SLIDER FOR TRANSACTION COUNTS
     public void transactionCountSelection() {
         sizeOrAmountText.textProperty().bind(numberOfTransactionsSlider.valueProperty().asString("%.0f"));
     }
 
+    //COMPLEXITY SELECTION DESCRIPTORS
     public void complexitySelection() {
         switch ((int) complexitySlider.getValue()) {
             case 1 -> {
@@ -647,6 +632,7 @@ public class WizardController {
 
     }
 
+    //FINAL GENERATION METHOD THAT COLLECTS ALL THE VARIABLES AND SENDS IT TO THE GENERATOR
     @FXML
     void generate() {
         boolean doubleSided = generateDoubleSides.isSelected();
@@ -712,6 +698,7 @@ public class WizardController {
         final String senderBicF = senderBic;
         final String receiverBicF = receiverBic;
 
+        //CREATES TASK & THREADS TO USE MULTITHREADED FILE OUTPUT TO SPEED UP OUTPUT TIME. CURRENTLY USES 2 THREADS
         progressBar.setProgress(-1.0);
         Task<Void> task = new Task<Void>() {
 
@@ -745,6 +732,7 @@ public class WizardController {
         });
     }
 
+    //CHANGES THE ESTIMATED TIME FROM DURATION TO A READABLE FORMAT
     public static String humanReadableFormat(Duration duration) {
         return duration.toString()
                 .substring(2)

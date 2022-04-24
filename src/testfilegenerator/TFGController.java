@@ -9,25 +9,18 @@ import com.broadridge.testfilegenerator.users.Role;
 import com.broadridge.testfilegenerator.users.User;
 import com.broadridge.testfilegenerator.users.UsersUtils;
 import static com.broadridge.testfilegenerator.users.UsersUtils.validatedUsers;
-import com.sun.javafx.css.StyleManager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
-import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -37,23 +30,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -63,6 +51,7 @@ import javafx.stage.Stage;
  */
 public class TFGController implements Initializable {
 
+    //FXML VARIABLES
     @FXML
     private Label label;
 
@@ -149,6 +138,7 @@ public class TFGController implements Initializable {
 
     boolean usersUpdated = false;
 
+    //LAUNCES THE MAIN PANE UPON PROGRAM LAUNCH
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         UsersUtils.createUsers();
@@ -159,16 +149,18 @@ public class TFGController implements Initializable {
 
     }
 
+    //AUTHENTICATES USER DEPENDING ON THE LIST RETRIEVED FROM VALIDATED USERS THAT READS USERS.XML
     public void authenticateUser() {
         boolean valid = UsersUtils.validateUser();
         if (valid) {
             loggedInUserText.setText("Logged in as " + UsersUtils.loggedInUser.getFirstName() + " " + UsersUtils.loggedInUser.getLastName());
-
+            //IF ITS THE FIRST LOGIN FOR THE USER, IT SETS THE PREFERENCES TO DEFAULT AS THIS NODE WON'T EXIST DURING FIRST LOGIN
             if (!UsersUtils.loggedInUser.getPreferences().isUserNode()) {
                 UsersUtils.loggedInUser.setPreferences("theme", "light");
                 UsersUtils.loggedInUser.setPreferences("finalfont", "12 \"System\"");
             }
 
+        //CLOSE PROGRAM IF AUTHENTICATION FAILS
         } else {
             loggedInUserText.setText("Login Failed");
             Alert alert = new Alert(AlertType.ERROR);
@@ -181,6 +173,7 @@ public class TFGController implements Initializable {
         }
     }
 
+    //OPENS WIZARD THAT GOES TO WIZARDCONTROLLER
     public void createNewFile() throws Exception {
         openWizard();
     }
@@ -199,7 +192,8 @@ public class TFGController implements Initializable {
         window.show();
         window.setResizable(false);
     }
-
+    
+    //OPENS SETTINGS DEPENDING ON USER ROLE
     public void openSettings() {
         usersTextArea.setVisible(false);
         if (settingsPane.isVisible()) {
@@ -222,6 +216,7 @@ public class TFGController implements Initializable {
         }
     }
 
+    //POPULATES THE USERS TABLE WITH THE USERS GATHERED FROM USERS.XML
     public void populateUsersTable() {
 
         ObservableList<User> observableUsers = FXCollections.observableArrayList(validatedUsers);
@@ -233,6 +228,7 @@ public class TFGController implements Initializable {
 
     }
 
+    //FUNCTIONALITY TO EDIT USERS THAT OPENS UP USERS.XML FOR THE USER TO EDIT THE VALID USERS
     public void editUsers() throws IOException {
         if (!usersTextArea.isVisible()) {
             usersTextArea.setVisible(true);
@@ -262,6 +258,7 @@ public class TFGController implements Initializable {
 
     }
 
+    //WHEN LOAD PREFERENCES IS CLICKED, IT SETS THE PREFERENCES TO THOSE SAVED WITHIN THE USERS PREFERENCES NODE
     public void setInitialPreferences() {
         if (UsersUtils.loggedInUser.getPreferences().get("theme", null).equals("dark")) {
             mainStackPane.getScene().getStylesheets().add("styles/dark-theme.css");
@@ -310,6 +307,7 @@ public class TFGController implements Initializable {
 
     }
 
+    //VIEW THE PREFERENCES PANE 
     public void viewPreferences() {
         mainStackPane.getChildren().clear();
         mainStackPane.getChildren().add(preferencesPane);
@@ -335,11 +333,13 @@ public class TFGController implements Initializable {
 
     }
 
+    //ABOUT SECTION
     public void viewAbout() {
         mainStackPane.getChildren().clear();
         mainStackPane.getChildren().add(aboutPane);
     }
 
+    //GUIDE SECTION
     public void viewGuide() {
         mainStackPane.getChildren().clear();
         mainStackPane.getChildren().add(guidePane);
@@ -350,11 +350,13 @@ public class TFGController implements Initializable {
         }
     }
 
+    //BUTTON THAT CLOSES THE GUIDE & ABOUT AND RETURNS TO MAIN SCREEN
     public void close() {
         mainStackPane.getChildren().clear();
         mainStackPane.getChildren().add(defaultPane);
     }
 
+    //APPLIES THE USER PREFERENCES AND SAVES THEM TO THE USERS PREFERENCES
     public void applyPreferences() {
         if (preferencesDarkTheme.isSelected()) {
             preferencesDarkTheme.getScene().getStylesheets().add("styles/dark-theme.css");
@@ -379,6 +381,7 @@ public class TFGController implements Initializable {
         settingsChanged = true;
     }
 
+    //METHOD THAT APPLIES THE USER PREFERENCES TO THE WIZARD SCREEN UPON WIZARD LAUNCH TO ENSURE PREFERENCES ARE SHOWN THROUGHOUT THE PROGRAM
     public void applySecondaryPreferences(Scene scene) {
         if (preferencesDarkTheme.isSelected()) {
             scene.getStylesheets().add("styles/dark-theme.css");
@@ -400,11 +403,13 @@ public class TFGController implements Initializable {
 
     }
 
+    //CANCEL PREFERENCES TO RETURN TO MAIN SCREEN
     public void cancelPreferences() {
         mainStackPane.getChildren().clear();
         mainStackPane.getChildren().add(defaultPane);
     }
 
+    //EXITS PROGRAM
     public void exitProgram() throws BackingStoreException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to quit?", ButtonType.YES, ButtonType.NO);
         alert.showAndWait();

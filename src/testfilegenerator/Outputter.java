@@ -18,6 +18,8 @@ import java.util.logging.Logger;
  *
  * @author zeyne
  */
+
+//OUTPUTTER OBJECT THAT IS CREATED WHEN FILES ARE BEING OUTPUTTED, CURRENTLY OUTPUTS FILES USING 2 THREADS RUNNING SIMULTANEOUSLY
 public class Outputter implements Runnable {
 
     private int start;

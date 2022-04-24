@@ -15,22 +15,15 @@ import com.prowidesoftware.swift.model.field.Field62F;
 import com.prowidesoftware.swift.model.field.Field64;
 import com.prowidesoftware.swift.model.field.Field86;
 import com.prowidesoftware.swift.model.mt.mt9xx.MT940;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import static java.lang.Math.random;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,12 +35,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import org.apache.commons.csv.CSVFormat;
@@ -70,6 +58,7 @@ public class Generator {
             LocalDate openingBalanceDateValue, LocalDate closingBalanceDateValue, BigDecimal transactionValueFrom,
             BigDecimal transactionValueTo, double complexity, boolean autoTxnValue, boolean doubleSided, boolean autoSenderBic, boolean autoReceiverBic, String senderBic, String receiverBic) throws IOException {
 
+        //CURRENTLY ONLY SUPPORTS MT940 SO IF SWIFT FORMAT = MT940 IT GOES TO RELEVANT GENERATION METHOD
         createDayFolders(outputPath, daysOfData);
         if (swiftFormat.equals("MT940")) {
             generateMT940(swiftFormat, outputPath, daysOfData, numberOfAccounts, numberOfFiles,
@@ -81,6 +70,7 @@ public class Generator {
 
     }
 
+    //METHOD TO GENERATE MT940'S
     public static void generateMT940(String swiftFormat, String outputPath, int daysOfData, int numberOfAccounts, int numberOfFiles,
             int sizeOrAmountValue, ObservableList<String> accounts, ObservableList<String> observableCurrencies, boolean randomlyGenerateAccounts, String openingBalCOrDValue,
             BigDecimal openingBalanceAmountValue, String currency, boolean autoGenerateBal, String closingBalCorDValue, BigDecimal closingBalanceAmountValue,
@@ -145,6 +135,7 @@ public class Generator {
         }
     }
 
+    //CREATES THE FOLDERS FOR EACH DAY
     public static void createDayFolders(String outputPath, int daysOfData) {
         //Create method that creates folders for each day
         for (int i = 1; i <= daysOfData; i++) {
@@ -153,12 +144,14 @@ public class Generator {
         }
     }
 
+    //CREATES A SIMPLE REFERENCE FOR THE MT940
     public static String createReference(int file) {
         String reference = "REFFORFILE" + String.valueOf(file);
         return reference;
 
     }
 
+    //CREATES THE ACCOUNTS THROUGHOUT THE GENERATION PROCESS DEPENDING ON RANDOM GENERATION OR USER INPUTS
     public static String createAccount(MT940[][][] allMessages, int file, int numAccounts, ObservableList<String> accounts, boolean randomlyGenerateAccounts) {
         String accountCode;
         if (file == 1) {
@@ -177,11 +170,13 @@ public class Generator {
         return accountCode;
     }
 
+    //RETURNS THE STATEMENT/SEQUENCE NUMBER FOR THE SWIFT MESSAGE
     public static String createStatSeqNo(int day, int file) {
         String StatSeqNo = day + "/" + file;
         return StatSeqNo;
     }
 
+    //CREATES THE FIRST OPENING BALANCE DEPENDING ON USER INPUT OR RANDOM GENERATION
     public static Field60F createFirstOpeningBal(int numAccounts, int numberOfFiles, MT940[][][] allMessages, String openingBalCOrDValue, LocalDate openingBalanceDateValue, BigDecimal openingBalanceAmountValue, String currency, ObservableList<String> observableCurrencies, boolean autoGenerateOpeningBal) {
         Field60F f60f = new Field60F();
         if (autoGenerateOpeningBal) {
@@ -199,8 +194,6 @@ public class Generator {
             Calendar c = Calendar.getInstance();
             c.setTime(d);
             f60f.setComponent2(c);
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
-//            String openingBalDateFinal = openingBalDate.format(formatter);
 
             Random r = new Random();
             String openingBalCurrency = observableCurrencies.get(r.nextInt(observableCurrencies.size()));
@@ -226,6 +219,7 @@ public class Generator {
         return f60f;
     }
 
+    //CREATES THE LAST CLOSING BALANCE DEPENDING ON USER INPUT OR RANDOM GENERATION
     public static Field62F createLastClosingBal(Field60F firstOpeningBal, int daysOfData, int numberOfFiles, int numAccounts, MT940[][][] allMessages, String closingBalCOrDValue, LocalDate closingBalanceDateValue, BigDecimal closingBalanceAmountValue, String currency, ObservableList<String> observableCurrencies, boolean autoGenerateClosingBal) {
         Field62F f62f = new Field62F();
         if (autoGenerateClosingBal) {
@@ -270,6 +264,7 @@ public class Generator {
 
     }
 
+    //CREATES THE OPENING BALANCE BY GETTING THE FIRST OPENING BALANCE OR BY GETTING THE CLOSING BALANCE FOR THE PREVIOUS DAY
     public static Field60F createOpBal(Field60F firstOpeningBal, int day, int file, int numberOfFiles, int numAccounts, MT940[][][] allMessages, String openingBalCOrDValue, LocalDate openingBalanceDateValue, BigDecimal openingBalanceAmountValue, String currency, ObservableList<String> observableCurrencies, boolean autoGenerateOpeningBal) {
         Field60F f60f = new Field60F();
         if (day == 1 && file == 1) {
@@ -294,6 +289,7 @@ public class Generator {
         return f60f;
     }
 
+    //CREATES THE TRANSACTION STATEMENT USING VARIOUS PROPERTIES DEPENDING ON COMPLEXITY OF FILE
     public static Field61 createStatement(MT940 m, MT940[][][] allMessages, int numAccounts, int day, int file, int daysOfData, int numberOfFiles, int numberOfStatements, int sizeOrAmountValue,
             BigDecimal transactionValueFrom, BigDecimal transactionValueTo, Field62F lastClosingBal, boolean autoTxnValue, double complexity, Field60F firstOpeningBal) {
 
@@ -305,6 +301,18 @@ public class Generator {
         ArrayList<String> txnCodes = new ArrayList<String>(Arrays.asList("S409", "S498", "S524", "S969", "NTRF", "NCHK", "NCOM", "NMSC", "NDDT", "NCHG", "NBRF", "NCMP", "S198",
                 "S224", "S108", "S950"));
         Random r = new Random();
+        if (complexity == 3) {
+            if (f61.getComponent3().equals("D")) {
+                f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4)));
+            }
+            if (f61.getComponent3().equals("C")) {
+                f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4) + 4));
+            }
+        } else {
+            f61.setComponent6("NTRF");
+        }
+        //IF IT IS THE LAST STATEMENT FOR THE LAST FILE & LAST DAY, THE PROGRAM NEEDS TO ENSURE THAT THE LAST CLOSING BALANCE SPECIFIED BY USER IS MET INSTEAD OF RANDOMLY
+        //GENERATING A TRANSACTION
         if (numberOfStatements == sizeOrAmountValue && day == daysOfData && file == numberOfFiles) {
             List<Field61> allTransactions = allMessages[numAccounts][day][file].getField61();
             BigDecimal penultimateBal = startingBal;
@@ -322,20 +330,6 @@ public class Generator {
             } else {
                 f61.setComponent3("C");
             }
-
-            if (complexity == 3) {
-                if (f61.getComponent3().equals("D")) {
-                    f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4)));
-                }
-                if (f61.getComponent3().equals("C")) {
-                    f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4) + 4));
-                }
-            } else {
-                f61.setComponent6("NTRF");
-            }
-            f61.setComponent8(allMessages[numAccounts][day][file].getField25().getAccount() + numberOfStatements);
-            f61.setComponent9("REF" + numberOfStatements + f61.getComponent6());
-
         } else {
             String[] dOrC = new String[]{"C", "D"};
             int rnd = new Random().nextInt(dOrC.length);
@@ -357,23 +351,14 @@ public class Generator {
                 txnAmount = txnAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
             }
             f61.setAmount(txnAmount);
-            if (complexity == 3) {
-                if (f61.getComponent3().equals("D")) {
-                    f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4)));
-                }
-                if (f61.getComponent3().equals("C")) {
-                    f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4) + 4));
-                }
-            } else {
-                f61.setComponent6("NTRF");
-            }
-            f61.setComponent8(allMessages[numAccounts][day][file].getField25().getAccount() + numberOfStatements);
-            f61.setComponent9("REF" + numberOfStatements + f61.getComponent6()+"D"+day+"F"+file);
-        }
 
+        }
+        f61.setComponent8(allMessages[numAccounts][day][file].getField25().getAccount() + numberOfStatements);
+        f61.setComponent9("REF" + numberOfStatements + f61.getComponent6() + "D" + day + "F" + file);
         return f61;
     }
 
+    //CREATES THE STATEMENT NARRATIVE DEPENDING ON TXN TYPE
     public static Field86 createStatementNarrative(MT940 m, MT940[][][] allMessages, int numAccounts, int day, int file, int numberOfStatements) {
         Field86 f86 = new Field86();
         String txnType = m.getField61().get(numberOfStatements - 1).getComponent7();
@@ -409,36 +394,23 @@ public class Generator {
         return f86;
     }
 
+    //CREATES FINAL NARRATIVE
     public static Field86 createFinalNarrative(MT940 m, MT940[][][] allMessages, int numAccounts, int day, int file) {
         Field86 f86 = new Field86();
         f86.setNarrative(allMessages[numAccounts][day][file].getField25().getAccount() + "FINAL FILE NARRATIVE FOR DAY " + day + " AND FILE " + file);
         return f86;
     }
 
+    //CREATES RELATED REFERENCE
     public static Field21 createRelatedReference(MT940 m, MT940[][][] allMessages, int numAccounts, int day, int file) {
         Field21 f21 = new Field21();
         f21.setReference("SWIFT FILE GENERATOR " + "OPENREFD" + day + "F" + file);
         return f21;
     }
 
+    //CREATES THE CLOSING BALANCE BY ADDING THE TRANSACTIONS TO THE OPENING BALANCE FOR THE SPECIFIC FILE
     public static Field62F createCloseBal(Field62F lastClosingBal, int day, int file, int numAccounts, int numberOfFiles, int daysOfData, MT940[][][] allMessages, String closingBalCOrDValue, LocalDate closingBalanceDateValue, BigDecimal closingBalanceAmountValue, String currency, ObservableList<String> observableCurrencies, boolean autoGenerateClosingBal
     ) {
-
-//        Field62F f62f;
-//        if (day == daysOfData && file == numberOfFiles) {
-//            f62f = new Field62F(lastClosingBal);
-//        } else {
-//            String[] dOrC = new String[]{"C", "D"};
-//            int rnd = new Random().nextInt(dOrC.length);
-//            String closingBalDorC = dOrC[rnd];
-//            Random rand = new Random();
-//            int closingBalAmount = rand.nextInt(999999);
-//            f62f = new Field62F(allMessages[numAccounts][day][file].getField60F().getValue());
-//            f62f.setAmount(closingBalAmount);
-//            f62f.setDCMark(closingBalDorC);
-//
-//        }
-//        return f62f;
         Field62F f62f = new Field62F(allMessages[numAccounts][day][file].getField60F().getValue());
         BigDecimal startingBal = allMessages[numAccounts][day][file].getField60F().getComponent4AsBigDecimal();
         List<Field61> allTransactions = allMessages[numAccounts][day][file].getField61();
@@ -459,12 +431,14 @@ public class Generator {
         return f62f;
     }
 
+    //CREATES AVAILABLE BAALNCE
     public static Field64 createAvailableBal(MT940 m) {
         String closingBal = m.getField62F().getValue();
         Field64 f64a = new Field64(closingBal);
         return f64a;
     }
 
+    //FUNCTIONALITY TO CREATE INTERNAL LEDGER CSV FILE THAT CORRESPONDS TO THE SWIFT MESSAGE(S) FOR THAT ACCOUNT&DAY
     public static void generateOppositeSide(MT940[][][] allMessages, int numAccounts, int day, String outputPath) throws FileNotFoundException, IOException {
         List<String[]> data = new ArrayList<>();
         String account = allMessages[numAccounts][day][1].getField25().getComponent1();
@@ -472,22 +446,23 @@ public class Generator {
             List<Field61> list = allMessages[numAccounts][day][i].getField61();
             for (int x = 0; x < list.size(); x++) {
                 Field61 txn = list.get(x);
-                data.add(new String[]{account, txn.getComponent1(), txn.getComponent3(), txn.getComponent5(), txn.getComponent6()+txn.getComponent7(),
+                data.add(new String[]{account, txn.getComponent1(), txn.getComponent3(), txn.getComponent5(), txn.getComponent6() + txn.getComponent7(),
                     txn.getComponent8(), txn.getComponent9()});
             }
         }
         String filename = "Day" + day + "Account" + numAccounts + " Internal Ledger";
         String finalPath = outputPath + "\\Day" + day;
         File fileToWrite = new File(finalPath, filename + ".csv");
-        try (CSVPrinter p = new CSVPrinter(new FileWriter(fileToWrite), CSVFormat.EXCEL)) {
+        try ( CSVPrinter p = new CSVPrinter(new FileWriter(fileToWrite), CSVFormat.EXCEL)) {
             p.printRecord("Account number", "Value Date", "Debit/Credit", "Amount", "Txn Code", "Reference to Account Owner", "Reference to Servicing Institution");
-            for (int i=0;i<data.size();i++){
+            for (int i = 0; i < data.size(); i++) {
                 p.printRecord(data.get(i));
             }
-            
+
         }
     }
 
+    //FUNCTIONALITY TO OUTPUT THE MESSAGE USING MULTITHREADING IN THE OUTPUTTER CLASS
     public static void outputMessage(MT940[][][] allMessages, String outputPath) throws InterruptedException {
         int halfway = (allMessages.length - 1) / 2;
         Thread t1 = new Thread(new Outputter(1, halfway, allMessages, outputPath));
