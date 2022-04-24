@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ValidUsers>
+        <User>
+            <firstName>Zeynel</firstName>
+            <lastName>Tok</lastName>
+            <userName>zeyne</userName>
+            <role>Developer</role>
+        </User>
+		<User>
+            <firstName>Tester</firstName>
+            <lastName>Tester</lastName>
+            <userName>TesterUN</userName>
+            <role>Admin</role>
+        </User>
+</ValidUsers>

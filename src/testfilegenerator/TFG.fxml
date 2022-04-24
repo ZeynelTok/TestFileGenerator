@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="testfilegenerator.TFGController">
+    <children>
+      <Pane prefHeight="32.0" prefWidth="640.0" AnchorPane.bottomAnchor="328.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button fx:id="settingsButton" layoutX="604.0" layoutY="-1.0" mnemonicParsing="false" onAction="#openSettings">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/settings-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <MenuBar prefHeight="28.0" prefWidth="113.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                        <MenuItem fx:id="createNewFile" mnemonicParsing="false" onAction="#createNewFile" text="Generate new File" />
+                        <MenuItem fx:id="preferences" mnemonicParsing="false" onAction="#viewPreferences" text="Preferences" />
+                    <MenuItem fx:id="close" mnemonicParsing="false" onAction="#exitProgram" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#viewGuide" text="Guide" />
+                        <MenuItem mnemonicParsing="false" onAction="#viewAbout" text="About " />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <Text fx:id="loggedInUserText" layoutX="113.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="174.13671875">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <TabPane fx:id="settingsPane" prefHeight="360.0" prefWidth="607.0" tabClosingPolicy="UNAVAILABLE" visible="false">
+        <tabs>
+          <Tab text="Users">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="331.0" prefWidth="642.0">
+                     <children>
+                        <TableView fx:id="usersTable" layoutX="14.0" layoutY="11.0" prefHeight="262.0" prefWidth="553.0" tableMenuButtonVisible="true">
+                          <columns>
+                              <TableColumn fx:id="usersTableSelect" minWidth="9.0" prefWidth="42.0" text="Select" />
+                            <TableColumn fx:id="usersTableFN" prefWidth="128.0" text="First Name" />
+                              <TableColumn fx:id="usersTableLN" prefWidth="130.0" text="Last Name" />
+                            <TableColumn fx:id="usersTableUN" prefWidth="113.0" text="User Name" />
+                              <TableColumn fx:id="usersTableR" prefWidth="130.0" text="Role" />
+                          </columns>
+                        </TableView>
+                        <TextArea fx:id="usersTextArea" prefHeight="277.0" prefWidth="566.0" />
+                        <Button fx:id="editUserB" layoutX="266.0" layoutY="281.0" mnemonicParsing="false" onAction="#editUsers" pickOnBounds="false" prefHeight="25.0" prefWidth="57.0" text="Edit" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <StackPane fx:id="mainStackPane" layoutY="28.0" prefHeight="332.0" prefWidth="640.0">
+         <children>
+            <Pane fx:id="defaultPane" prefHeight="332.0" prefWidth="640.0">
+               <children>
+                  <Line endX="640.0" />
+                  <Label layoutX="162.0" layoutY="32.0" prefHeight="178.0" prefWidth="316.0" text="Welcome to the SWIFT File Generator To start, please select the &quot;Generate&quot; button below. " textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="273.0" layoutY="234.0" mnemonicParsing="false" onAction="#createNewFile" prefHeight="44.0" prefWidth="95.0" text="Generate" />
+               </children>
+            </Pane>
+            <Pane fx:id="preferencesPane" prefHeight="332.0" prefWidth="640.0">
+               <children>
+                  <Button fx:id="applyPreferences" layoutX="435.0" layoutY="258.0" mnemonicParsing="false" onAction="#applyPreferences" prefHeight="44.0" prefWidth="89.0" text="Apply" />
+                  <Button fx:id="cancelPreferences" layoutX="538.0" layoutY="258.0" mnemonicParsing="false" onAction="#cancelPreferences" prefHeight="44.0" prefWidth="76.0" text="Close" />
+                  <Button layoutX="305.0" layoutY="258.0" mnemonicParsing="false" onAction="#setInitialPreferences" prefHeight="44.0" prefWidth="113.0" text="Load Preferences" />
+                  <Label layoutX="22.0" layoutY="25.0" text="Theme" />
+                  <RadioButton fx:id="preferencesLightTheme" layoutX="80.0" layoutY="25.0" mnemonicParsing="false" text="Light" />
+                  <RadioButton fx:id="preferencesDarkTheme" layoutX="144.0" layoutY="25.0" mnemonicParsing="false" text="Dark" />
+                  <Label layoutX="58.0" layoutY="56.0" text="Font" />
+                  <Label layoutX="176.0" layoutY="56.0" text="Font Size" />
+                  <ListView fx:id="fontList" layoutX="4.0" layoutY="79.0" prefHeight="202.0" prefWidth="156.0" />
+                  <ListView fx:id="fontSizeList" layoutX="166.0" layoutY="79.0" prefHeight="202.0" prefWidth="95.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="aboutPane" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="13.0" layoutY="161.0" prefHeight="65.0" prefWidth="614.0" text="The SWIFT Message Generator uses open source libraries such as JavaFX &amp; ProWide Swift Core. Licensing details for these libraries can be found at https://www.oracle.com/downloads/licenses/binary-code-license.html &amp;https://www.apache.org/licenses/LICENSE-2.0 respectively." textAlignment="JUSTIFY" wrapText="true" />
+                  <Label layoutX="14.0" layoutY="102.0" prefHeight="59.0" prefWidth="614.0" text="This program was created for the purpose of research and potential use by the Implementations team of Broadridge Financial Solutions which was a subject of the project and the organisation which the researcher (Zeynel Tok) currently works in." textAlignment="JUSTIFY" wrapText="true" />
+                  <Label layoutX="13.0" layoutY="58.0" prefHeight="44.0" prefWidth="614.0" text="This program was created by Zeynel Tok as part of a Final Year Project for a BSc Digital &amp; Technology Solutions Degree Apprenticeship in the academic year of 2021/2022." textAlignment="JUSTIFY" wrapText="true" />
+                  <Label layoutX="13.0" layoutY="221.0" prefHeight="53.0" prefWidth="614.0" text="For any questions, concerns or issues please contact the researcher at Zeynel.Tok@broadridge.com or z.a.tok@se18.qmul.ac.uk" textAlignment="JUSTIFY" wrapText="true" />
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="44.0" prefWidth="614.0" text="This is a SWIFT Message Generator which currently supports the generation of MT940 end-of-day bank account statements." wrapText="true" />
+                  <Button layoutX="285.0" layoutY="285.0" mnemonicParsing="false" onAction="#close" text="Close" />
+               </children>
+            </Pane>
+            <Pane fx:id="guidePane" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <TextArea fx:id="userGuide" editable="false" layoutX="12.0" layoutY="8.0" prefHeight="285.0" prefWidth="614.0" text="Welcome to the User Guide for the SWIFT Generator&#10;&#10;Contents:&#10;Section 1: Inital Generation Parameters&#10;Section 2: Account Information&#10;Section 3: Balance Information&#10;Section 4: Transaction Information&#10;Section 5: File Complexity&#10;&#10;&#10;Section 1: Inital Generation Parameters:&#10;The first section of the SWIFT generator is the set the initial properties of file generation. This starts with selecting a SWIFT format to generate. Currently only MT940 messages are supported. This is alongside a button that allows you to generate double sided data. If this option is selected then the Internal ledger statements that corresponds with the generated SWIFT messages will also be generated that can be used for matching &amp; reconciliations.&#10;The output path should be selected and this is the path where the folders will be created for each individual day which will contain all the files for all the accounts for that particular day.&#10;The days of data is how many days of data should be generated.&#10;The number of accounts is the number of accounts that data should be generated for.&#10;The files per account is how many files should be generated per account. So if 5 accounts are selected with 5 files per account, this will total 25 files for that particular day.&#10;The transactions per file is how many transactions (including both debits &amp; credits) that an individual file should include. This is limited to 15 in order to ensure the validity of the SWIFT messages by not surpassing 2000 characters.&#10;&#10;Section 2: Account Information:&#10;In the account information section, the sender &amp; receiver BIC codes are defaulted to AUTO &amp; the account numbers are defaulted to manual generation.&#10;These can be unchecked to manually specify a BIC code the SWIFT messages should include, this will populate the BIC code in the corresponding sections of each SWIFT message generated with the receiver &amp; sender BIC in SWIFT blocks 1&amp;2.&#10;The accounts can also be manually inserted using a text field that will add to a list of accounts, these accounts would then be used instead of the manually generated accounts which start with &quot;RAND&quot; followed by a random sequence of digits to mimic a real account.&#10;&#10;Section 3: Balance Information:&#10;The balances are defaulted to Auto Generate however this box can be unchecked to enter the starting and closing balances manually. The closing balance is required to have the same currency as the starting balance hence the box is disabled. Similarly with the closing balance date, this cannot be manually overriden as the closing balance date will simply be the opening balance date + days of data (selected in Section 1)&#10;The other options including the DEBIT/CREDIT mark and the balance amount value should be populated and this will be the starting balance from the first file generated and the closing balance of the last file generated.&#10;&#10;Section 4: Transaction Information:&#10;The transactional values can be specified to be between certain values if the . This is to allow further customisability of the SWIFT messages generated. Each of the transactions generated will have a value between the specified amounts. The transactional dates cannot be specified with the current version of the software as these dates will be automatically populated depending on the days selected in Section 1 and the current file that is being created. However this option is left in for any future improvements to the SWIFT generator.&#10;&#10;Section 5: Complexity:&#10;This is where the complexity of the file can be selected with a brief message on what each of the complexities entail. Complexity 1 is the simplest and is a very bare-bones SWIFT message that doesnt include any optional fields. Complexity 2 builds upon Complexity one and includes some optional fields such as the transaction narrative. Complexity 3 is the most complex file that includes all the optional fields such as the final narrative, the account relating reference, etc. Complexity 3 also has the capability to generate transactions of different transaction types instead of the default &quot;NTRF&quot; (Transfer)&#10;&#10;&#10;&#10;" wrapText="true" />
+                  <Button layoutX="298.0" layoutY="299.0" mnemonicParsing="false" onAction="#close" text="Close" />
+               </children>
+            </Pane>
+         </children>
+      </StackPane>
+    </children>
+   <effect>
+      <Blend />
+   </effect>
+   <cursor>
+      <Cursor fx:constant="DEFAULT" />
+   </cursor>
+</AnchorPane>

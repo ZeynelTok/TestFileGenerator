@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="382.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="testfilegenerator.WizardController">
+   <children>
+      <Button fx:id="nextButton" layoutX="443.0" layoutY="343.0" mnemonicParsing="false" onAction="#nextAction" text="Next" />
+      <Button fx:id="backButton" layoutX="371.0" layoutY="343.0" mnemonicParsing="false" onAction="#backAction" text="Back" />
+      <Button fx:id="finalGenerateButton" layoutX="503.0" layoutY="343.0" mnemonicParsing="false" onAction="#generate" prefHeight="25.0" prefWidth="69.0" text="Generate" />
+      <StackPane fx:id="stackPane" layoutX="14.0" layoutY="14.0" prefHeight="325.0" prefWidth="563.0">
+         <children>
+            <Pane fx:id="pane1" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <TextField fx:id="outputPathText" editable="false" layoutX="112.0" layoutY="60.0" prefHeight="25.0" prefWidth="328.0" />
+                  <Label layoutX="28.0" layoutY="22.0" text="SWIFT Format:" />
+                  <ChoiceBox fx:id="swiftFormatSelector" layoutX="112.0" layoutY="18.0" prefWidth="150.0" />
+                  <Label layoutX="28.0" layoutY="64.0" text="Output Path" />
+                  <Button fx:id="browseButton" layoutX="454.0" layoutY="60.0" mnemonicParsing="false" onAction="#browseDirectory" prefHeight="25.0" prefWidth="84.0" text="Browse" />
+                  <Label layoutX="27.0" layoutY="190.0" prefHeight="36.0" prefWidth="65.0" text="Files Per Account" wrapText="true" />
+                  <TextField fx:id="sizeOrAmountText" editable="false" layoutX="112.0" layoutY="248.0" prefHeight="25.0" prefWidth="117.0" />
+                  <TextField fx:id="numberOfFilesText" layoutX="112.0" layoutY="196.0" prefHeight="25.0" prefWidth="117.0" />
+                  <TextField fx:id="daysOfDataText" layoutX="112.0" layoutY="103.0" prefHeight="25.0" prefWidth="117.0" />
+                  <Label layoutX="27.0" layoutY="107.0" text="Days Of Data" />
+                  <Label layoutX="27.0" layoutY="145.0" prefHeight="36.0" prefWidth="65.0" text="Number Of Accounts" wrapText="true" />
+                  <TextField fx:id="numberOfAccountsText" layoutX="112.0" layoutY="151.0" prefHeight="25.0" prefWidth="117.0" />
+                  <Label layoutX="27.0" layoutY="242.0" prefHeight="36.0" prefWidth="69.0" text="Transactions Per File" wrapText="true" />
+                  <Slider fx:id="numberOfTransactionsSlider" blockIncrement="1.0" layoutX="112.0" layoutY="285.0" majorTickUnit="1.0" max="15.0" min="1.0" minorTickCount="0" onMouseDragged="#transactionCountSelection" onMouseReleased="#transactionCountSelection" prefHeight="14.0" prefWidth="117.0" showTickMarks="true" snapToTicks="true" value="1.0" />
+                  <RadioButton fx:id="generateDoubleSides" layoutX="312.0" layoutY="22.0" mnemonicParsing="false" text="Generate Double Sides" />
+               </children>
+            </Pane>
+            <Pane fx:id="pane2" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="36.0" prefWidth="233.0" text="Account Information">
+                     <font>
+                        <Font size="24.0" />
+                     </font></Label>
+                  <RadioButton fx:id="randomlyGenerateButton" layoutX="10.0" layoutY="202.0" mnemonicParsing="false" onAction="#accountSelectorSwitch" text="Randomly Generate" />
+                  <RadioButton fx:id="manuallyInsertButton" layoutX="10.0" layoutY="221.0" mnemonicParsing="false" onAction="#accountSelectorSwitch" text="Manually Insert" />
+                  <Label fx:id="randomlyGenerateNote" layoutX="10.0" layoutY="242.0" prefHeight="94.0" prefWidth="259.0" style="-fx-border-color: black;" text="Note: Randomly generating accounts will randomly generate numeric accounts between 8-12 digits long" textAlignment="CENTER" wrapText="true" />
+                  <Button fx:id="addAccountButton" layoutX="477.0" layoutY="171.0" mnemonicParsing="false" onAction="#addAccount" prefHeight="25.0" prefWidth="41.0" text="+" />
+                  <Button fx:id="removeAccountButton" layoutX="477.0" layoutY="217.0" mnemonicParsing="false" onAction="#removeAccount" prefHeight="25.0" prefWidth="41.0" text="-" />
+                  <TextField fx:id="accountTextBox" layoutX="451.0" layoutY="126.0" prefHeight="25.0" prefWidth="94.0" />
+                  <ListView fx:id="accountNumberTable" layoutX="247.0" layoutY="110.0" prefHeight="200.0" prefWidth="200.0" />
+                  <Label fx:id="accountNumbersText" layoutX="284.0" layoutY="78.0" prefHeight="25.0" prefWidth="126.0" text="Account Numbers" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="171.0" prefHeight="25.0" prefWidth="126.0" text="Account Numbers" />
+                  <Label layoutX="13.0" layoutY="53.0" prefHeight="25.0" prefWidth="126.0" text="BIC Details" />
+                  <TextField fx:id="senderBicBox" layoutX="13.0" layoutY="78.0" prefHeight="25.0" prefWidth="142.0" promptText="Sender BIC" />
+                  <TextField fx:id="receiverBicBox" layoutX="13.0" layoutY="110.0" prefHeight="25.0" prefWidth="142.0" promptText="Receiver BIC" />
+                  <RadioButton fx:id="sBAuto" layoutX="167.0" layoutY="82.0" mnemonicParsing="false" onAction="#bicSelectors" prefHeight="17.0" prefWidth="56.0" text="Auto" />
+                  <RadioButton fx:id="rBAuto" layoutX="167.0" layoutY="114.0" mnemonicParsing="false" onAction="#bicSelectors" prefHeight="17.0" prefWidth="56.0" text="Auto" />
+               </children>
+            </Pane>
+            <Pane fx:id="pane3" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="36.0" prefWidth="382.0" text="Balance Information">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="85.0" prefHeight="17.0" prefWidth="163.0" text="Opening Balance for 1st Day:" />
+                  <TextField fx:id="openingBalanceAmount" layoutX="108.0" layoutY="111.0" prefHeight="25.0" prefWidth="117.0" promptText="Balance Amount" />
+                  <ChoiceBox fx:id="openingBalCOrD" layoutX="14.0" layoutY="111.0" prefHeight="25.0" prefWidth="84.0" />
+                  <RadioButton fx:id="balanceRandomButton" layoutX="442.0" layoutY="154.0" mnemonicParsing="false" onAction="#balanceGenerateSwitch" text="Auto Generate" />
+                  <DatePicker fx:id="openingBalanceDate" layoutX="313.0" layoutY="111.0" prefHeight="25.0" prefWidth="117.0" promptText="Balance Date" />
+                  <Label layoutX="14.0" layoutY="169.0" prefHeight="17.0" prefWidth="163.0" text="Closing Balance for Last Day:" />
+                  <ChoiceBox fx:id="closingBalCOrD" layoutX="14.0" layoutY="195.0" prefHeight="25.0" prefWidth="84.0" />
+                  <TextField fx:id="closingBalanceAmount" layoutX="108.0" layoutY="195.0" prefHeight="25.0" prefWidth="117.0" promptText="Balance Amount" />
+                  <DatePicker fx:id="closingBalanceDate" disable="true" editable="false" layoutX="313.0" layoutY="195.0" prefHeight="25.0" prefWidth="117.0" promptText="Balance Date" />
+                  <ChoiceBox fx:id="currencies2" disable="true" layoutX="238.0" layoutY="195.0" prefHeight="25.0" prefWidth="69.0" />
+                  <ComboBox fx:id="currencies" editable="true" layoutX="238.0" layoutY="111.0" prefHeight="25.0" prefWidth="69.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="pane4" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="36.0" prefWidth="382.0" text="Transactional Information">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txnValueFrom" disable="true" layoutX="14.0" layoutY="98.0" prefHeight="25.0" prefWidth="117.0" />
+                  <Label layoutX="14.0" layoutY="69.0" text="Transaction Values between" />
+                  <Label layoutX="144.0" layoutY="102.0" text="and" />
+                  <TextField fx:id="txnValueTo" disable="true" layoutX="177.0" layoutY="98.0" prefHeight="25.0" prefWidth="117.0" />
+                  <Label layoutX="14.0" layoutY="136.0" text="Dates Between" />
+                  <DatePicker fx:id="txnDateFrom1" disable="true" editable="false" layoutX="12.0" layoutY="160.0" prefHeight="25.0" prefWidth="117.0" promptText="Date" />
+                  <DatePicker fx:id="txnDateTo1" disable="true" editable="false" layoutX="177.0" layoutY="160.0" prefHeight="25.0" prefWidth="117.0" promptText="Date" />
+                  <Label layoutX="144.0" layoutY="164.0" text="and" />
+                  <Label layoutX="14.0" layoutY="231.0" prefHeight="72.0" prefWidth="280.0" style="-fx-border-color: black;" text="Note: The Transactions generated will have varying transaction codes depending on the complexity selected. To view the full list of codes please review the relevant section in the guide" wrapText="true" />
+                  <Label layoutX="304.0" layoutY="149.0" prefHeight="72.0" prefWidth="200.0" text="The transaction dates will start from the opening balance date &amp; end depending on the number of days selected" wrapText="true" />
+                  <Label fx:id="txnValueBetweenPrompt" layoutX="304.0" layoutY="83.0" prefHeight="64.0" prefWidth="189.0" text="Transaction values can only be selected if balances are auto generated" wrapText="true" />
+                  <RadioButton fx:id="autoTxnValue" layoutX="304.0" layoutY="102.0" mnemonicParsing="false" onAction="#txnAutoSwitch" text="Auto" />
+               </children>
+            </Pane>
+            <Pane fx:id="pane5" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="36.0" prefWidth="382.0" text="File Complexity">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Slider fx:id="complexitySlider" blockIncrement="1.0" layoutX="107.0" layoutY="73.0" majorTickUnit="1.0" max="3.0" min="1.0" minorTickCount="0" onMouseReleased="#complexitySelection" prefHeight="14.0" prefWidth="350.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" />
+                  <Label fx:id="complexity1Text" layoutX="61.0" layoutY="140.0" prefHeight="147.0" prefWidth="443.0" text="Complexity 1 is a very bare-bones SWIFT file. It does not include any optional fields for the specified SWIFT format such as Narrative's or Available Balance fields. Complexity 1 also limits the file to a single Transaction code that is used for all the transactions that are generated." wrapText="true" />
+                  <Label fx:id="complexity2Text" layoutX="60.0" layoutY="140.0" prefHeight="147.0" prefWidth="443.0" text="Complexity 2 is a slightly more complicated File. It can include the optional fields not included in Complexity 1. " wrapText="true" />
+                  <Label fx:id="complexity3Text" layoutX="60.0" layoutY="140.0" prefHeight="147.0" prefWidth="443.0" text="Complexity 3 is the highest level of complexity and includes all optional fields and also multiple different transaction codes per transaction." wrapText="true" />
+               </children>
+            </Pane>
+            <Pane fx:id="pane6" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="36.0" prefWidth="382.0" text="Summary">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <ProgressBar fx:id="progressBar" layoutX="33.0" layoutY="261.0" prefHeight="25.0" prefWidth="497.0" progress="0.0" />
+                  <Label fx:id="summarySwiftFormat" layoutX="33.0" layoutY="62.0" prefHeight="25.0" prefWidth="142.0" text="SWIFT Format: " />
+                  <Label fx:id="summaryDays" layoutX="33.0" layoutY="87.0" prefHeight="25.0" prefWidth="126.0" text="Days of Data: " />
+                  <Label fx:id="summaryAccounts" layoutX="33.0" layoutY="112.0" prefHeight="25.0" prefWidth="150.0" text="Number of Accounts:" />
+                  <Label fx:id="summaryFiles" layoutX="33.0" layoutY="137.0" prefHeight="25.0" prefWidth="147.0" text="Files Per Account:" />
+                  <Label fx:id="summaryTotalFiles" layoutX="264.0" layoutY="62.0" prefHeight="25.0" prefWidth="147.0" text="Total Files:" />
+                  <Label fx:id="summaryTxns" layoutX="33.0" layoutY="163.0" prefHeight="25.0" prefWidth="163.0" text="Transactions per File" />
+                  <Label fx:id="summaryTotalTxns" layoutX="264.0" layoutY="87.0" prefHeight="25.0" prefWidth="200.0" text="Total Transactions" />
+                  <Label fx:id="summaryComplexity" layoutX="33.0" layoutY="188.0" prefHeight="25.0" prefWidth="117.0" text="Complexity:" />
+                  <Label fx:id="summaryEstimate" layoutX="264.0" layoutY="139.0" prefHeight="45.0" prefWidth="297.0" text="Estimated Time to Generate: " wrapText="true" />
+                  <Label fx:id="summaryDoubleSided" layoutX="33.0" layoutY="222.0" prefHeight="25.0" prefWidth="126.0" text="Double Sided: " />
+               </children>
+            </Pane>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>
