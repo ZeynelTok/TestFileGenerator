@@ -91,9 +91,13 @@ public class Generator {
                     m.getSwiftMessage().setBlock1(b1);
                     if (!autoSenderBic) {
                         m.setSender(senderBic);
+                    } else {
+                        m.setSender("TESTBIC");
                     }
                     if (!autoReceiverBic) {
                         m.setReceiver(receiverBic);
+                    } else {
+                        m.setReceiver("TESTBIC");
                     }
                     m.addField(new Field20(createReference(file)));
                     allMessages[numAccounts][day][file] = m;
@@ -301,16 +305,7 @@ public class Generator {
         ArrayList<String> txnCodes = new ArrayList<String>(Arrays.asList("S409", "S498", "S524", "S969", "NTRF", "NCHK", "NCOM", "NMSC", "NDDT", "NCHG", "NBRF", "NCMP", "S198",
                 "S224", "S108", "S950"));
         Random r = new Random();
-        if (complexity == 3) {
-            if (f61.getComponent3().equals("D")) {
-                f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4)));
-            }
-            if (f61.getComponent3().equals("C")) {
-                f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4) + 4));
-            }
-        } else {
-            f61.setComponent6("NTRF");
-        }
+
         //IF IT IS THE LAST STATEMENT FOR THE LAST FILE & LAST DAY, THE PROGRAM NEEDS TO ENSURE THAT THE LAST CLOSING BALANCE SPECIFIED BY USER IS MET INSTEAD OF RANDOMLY
         //GENERATING A TRANSACTION
         if (numberOfStatements == sizeOrAmountValue && day == daysOfData && file == numberOfFiles) {
@@ -329,6 +324,16 @@ public class Generator {
                 f61.setComponent3("D");
             } else {
                 f61.setComponent3("C");
+            }
+            if (complexity == 3) {
+                if (f61.getComponent3().equals("D")) {
+                    f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4)));
+                }
+                if (f61.getComponent3().equals("C")) {
+                    f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4) + 4));
+                }
+            } else {
+                f61.setComponent6("NTRF");
             }
         } else {
             String[] dOrC = new String[]{"C", "D"};
@@ -349,6 +354,16 @@ public class Generator {
             } else {
                 txnAmount = BigDecimal.valueOf(rand.nextDouble(transactionValueFrom.doubleValue(), transactionValueTo.add(BigDecimal.ONE).doubleValue()));
                 txnAmount = txnAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+            if (complexity == 3) {
+                if (f61.getComponent3().equals("D")) {
+                    f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4)));
+                }
+                if (f61.getComponent3().equals("C")) {
+                    f61.setComponent6(txnCodes.get(r.nextInt(txnCodes.size() - 4) + 4));
+                }
+            } else {
+                f61.setComponent6("NTRF");
             }
             f61.setAmount(txnAmount);
 
@@ -423,9 +438,9 @@ public class Generator {
         }
         BigDecimal closingBal = startingBal;
         if (closingBal.compareTo(BigDecimal.ZERO) < 0) {
-            f62f.setComponent3("D");
+            f62f.setComponent1("D");
         } else {
-            f62f.setComponent3("C");
+            f62f.setComponent1("C");
         }
         f62f.setComponent4(closingBal.abs());
         return f62f;
